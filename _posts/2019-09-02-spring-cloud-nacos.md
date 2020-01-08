@@ -5,6 +5,8 @@ date: 2019-09-02
 Author: bkhech
 tags: [springcloud]
 comments: true
+toc: true
+pinned: true
 ---
 
 > 下面主要介绍使用Spring Boot集成Nacos的**服务注册发现**和**配置管理**功能以及**集成规范**。
