@@ -53,8 +53,10 @@ pinned: false
 
 2. 查看所有依赖：
 
-​        gradlew dependencies
-
+   gradlew dependencies
+3. 编译指定模块
+   gradlew :模块名:clean :模块名:build -x test
+   eg: gradlew :web:clean :web:build -x test
 
 
 > 详情参阅
