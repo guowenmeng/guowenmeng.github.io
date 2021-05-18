@@ -26,8 +26,7 @@ pinned: false
 3. 查看不兴趣的依赖部分：
 
    mvn dependency:tree -Dexcludes=\*fastjson* 
-
-
+   
 
 **注意： 其中：**
 
@@ -38,6 +37,16 @@ pinned: false
 ​       **-Dincludes/excludes后面的值为groupId，不要传artifactId**
 
 ![img](C:\Users\guowm\AppData\Local\Temp\企业微信截图_15790687329249.png)
+
+4. Maven多模块工程打包指定模块工程执行如下命令：
+
+​       mvn clean package -pl  指定模块工程名 -am
+
+> 参数说明：
+> -am --also-make 同时构建所列模块的依赖模块；
+> -amd -also-make-dependents 同时构建依赖于所列模块的模块；
+> -pl --projects <arg> 构建制定的模块，模块间用逗号分隔；
+> -rf -resume-from <arg> 从指定的模块恢复反应堆。
 
 
 
