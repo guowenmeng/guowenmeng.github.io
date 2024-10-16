@@ -7,9 +7,8 @@
 </div>
 </html>
 
-> 持续学习者的个人博客 :100:
+> :100:
+> 持续学习者
 
-
-Copyright © 2018-2024 wenmeng All Rights Reserved
 
 [开始使用 Let's Go](/README.md)
