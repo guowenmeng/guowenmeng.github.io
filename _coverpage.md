@@ -11,4 +11,4 @@
 > 持续学习者
 
 
-[开始使用 Let's Go](/README.md)
+[继续深入了解](/README.md)
