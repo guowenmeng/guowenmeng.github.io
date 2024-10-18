@@ -16,14 +16,14 @@ Github Pages 可以使你在互联网上建立自己的网站。但是，如果�
 
    > 记录值就是你的 Github Pages 地址，记录类型填写 CName，主机记录就是你的二级域名地址
 
-![image-20241017102456074](https://gitee.com/bkhech/blog-images/raw/master/img/2024/10/17/20241017102456.png)
+![image-20241017102456074](https://raw.githubusercontent.com/guowenmeng/wodkshje/main/wm2024/10/17/20241017102456.png)
 
 2. 添加 CNAME 文件
 
    > 文件内容是`二级域名.自己的域名`
-   > ![image-20241017102932015](https://gitee.com/bkhech/blog-images/raw/master/img/2024/10/17/20241017102932.png)
+   > ![image-20241017102932015](https://raw.githubusercontent.com/guowenmeng/wodkshje/main/wm2024/10/17/20241017102932.png)
 
-![image-20241017102750194](https://gitee.com/bkhech/blog-images/raw/master/img/2024/10/17/20241017102750.png)
+![image-20241017102750194](https://raw.githubusercontent.com/guowenmeng/wodkshje/main/wm2024/10/17/20241017102750.png)
 
 3. 访问配置的 CNAME
 
