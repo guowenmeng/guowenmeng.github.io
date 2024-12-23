@@ -6,6 +6,7 @@
 >
 > 1. 离线消息如何存储
 > 2. Netty 集群如何构建
+> 3. [欢迎访问源码](https://gitee.com/bkhech)
 
 ## 高性能聊天服务
 
@@ -640,9 +641,50 @@ public static int selectPort() {
 
 ## 容器化部署
 
+> docker compose 方式
+
 ### 基础服务部署
 
+- 比如 Redis 服务
 
+  1. redis.conf
+
+     ```properties
+     # redis 密码
+     requirepass 123456
+     
+     # key 监听器配置
+     # notify-keyspace-events Ex
+     
+     # 配置持久化文件存储路径
+     dir /redis/data
+     # 配置rdb
+     # 15分钟内有至少1个key被更改则进行快照
+     save 900 1
+     # 5分钟内有至少10个key被更改则进行快照
+     save 300 10
+     # 1分钟内有至少10000个key被更改则进行快照
+     save 60 10000
+     # 开启压缩
+     rdbcompression yes
+     # rdb文件名 用默认的即可
+     dbfilename dump.rdb
+     
+     # 开启aof
+     appendonly yes
+     # 文件名
+     appendfilename "appendonly.aof"
+     # 持久化策略,no:不同步,everysec:每秒一次,always:总是同步,速度比较慢
+     # appendfsync always
+     appendfsync everysec
+     # appendfsync no
+     ```
+
+  2. redis docker-compose.yaml
+
+     ```shell
+     https://gitee.com/bkhech/bkhech-chat/blob/master/script/docker/docker-compose-base.yml
+     ```
 
 ### 微服务部署
 
@@ -661,60 +703,126 @@ public static int selectPort() {
      > 参考：https://blog.csdn.net/qqnbsp/article/details/120839393
 
      ```dockerfile
-     FROM openjdk:17
-     
-     MAINTAINER bkhech
-     
-     RUN mkdir -p /mydata/logs \
-         /mydata/temp
-     
-     WORKDIR /mydata
-     
-     ENV SERVER_PORT=1000 LANG=C.UTF-8 LC_ALL=C.UTF-8 JAVA_OPTS="-Xms128m -Xmx256m"
-     EXPOSE ${SERVER_PORT}
-     
-     ADD ./target/chat-gateway-*.jar ./app.jar
-     
-     ENTRYPOINT java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${SERVER_PORT} \
-                -XX:+HeapDumpOnOutOfMemoryError  -XX:HeapDumpPath=/mydata/temp/heapdump.hprof \
-                -XX:+UseZGC \
-                ${JAVA_OPTS} \
-                -jar app.jar
+     https://gitee.com/bkhech/bkhech-chat/blob/master/chat-api/auth-service/Dockerfile
      ```
-
-  2. 编译镜像文件（Image），并上传（Push）至远程仓库（Registry 比如：阿里云镜像仓库）
-
+     
+  2. 编译镜像文件（Image），并上传（Push）至远程仓库（Registry 比如：阿里云镜像仓库，可选）
+  
      ```shell
-     # maven 打包
-     mvn clean package -pl chat-gateway -am -DskipTests
-     # 构建镜像
-     docker build -f DockerFile -t chat/chat-gateway:1.0.0 . 
-     # 登录阿里云Docker Registry
-     docker login --username=guowen***@163.com registry.cn-hangzhou.aliyuncs.com
-     # 将镜像打标签，并推送到Registry
-     docker tag chat/chat-gateway:1.0.0 registry.cn-hangzhou.aliyuncs.com/bkhech08/chat-gateway:1.0.0
-     docker push registry.cn-hangzhou.aliyuncs.com/bkhech08/chat-gateway:1.0.0
+     https://gitee.com/bkhech/bkhech-chat/blob/master/script/docker/api-build.sh
+     https://gitee.com/bkhech/bkhech-chat/blob/master/script/docker/gateway-build.sh
      ```
-
+  
   3. 在生产服务器上，从远程仓库拉取（Pull）镜像文件，并启动项目
-
+  
      ```shell
-     # 登录阿里云Docker Registry
-     docker login --username=guowen***@163.com registry.cn-hangzhou.aliyuncs.com
-     # 从Registry中拉取镜像
-     docker pull registry.cn-hangzhou.aliyuncs.com/bkhech08/chat-gateway:1.0.0
-     # 启动项目
-     docker run \
-     --name chat-gateway \
-     -p 1000:1000 \
-     -e PROFILE=prod \
-     -v /home/chat/chat-gateway/mydata/logs:/mydata/logs \
-     -d registry.cn-hangzhou.aliyuncs.com/bkhech08/chat-gateway:1.0.0
+     https://gitee.com/bkhech/bkhech-chat/blob/master/script/docker/docker-compose-api.yml
      ```
   
 - Netty 服务
 
   > 聊天服务
+  
+  1. 编写 `DockerFile` 文件
+  
+     > -jar app.jar ${SERVER_PORT}  端口号当做 JVM 环境变量参数传入
+  
+     ```dockerfile
+     https://gitee.com/bkhech/bkhech-chat/blob/master/chat-api/chat-server/Dockerfile
+     ```
+  
+  2. 编译镜像文件（Image），并上传（Push）至远程仓库（Registry 比如：阿里云镜像仓库，可选）
+  
+     ```shell
+     https://gitee.com/bkhech/bkhech-chat/blob/master/script/docker/api-build.sh
+     ```
+     
+  3. 在生产服务器上，从远程仓库拉取（Pull）镜像文件，并启动项目
+  
+     ```shell
+     https://gitee.com/bkhech/bkhech-chat/blob/master/script/docker/docker-compose-api.yml
+     ```
+
+### docker-compose 常用命令
+
+```shell
+# docker compose commands
+
+# 后台启动配置文件中的所有服务：
+docker compose -f docker-compose.yml -p chat up -d
+# 后台启动一部分服务
+docker compose -f docker-compose.yml -p chat up -d chat-gateway main-service
+
+# 扩容 main-service 服务。
+# 注意：如果要使用扩缩容，不要指定容器名称，让其自动生成(services.main-service.container_name)
+# 在 Docker Compose 中，container_name 用于指定容器的名称，通常 Docker Compose 会自动为容器生成名称如果不指定，格式为 <项目名>_<服务名>_<序号>，比如 chat_main_service_1
+# 其中，项目名通过 -p 指定
+docker compose -f docker-compose.yml -p chat up -d main-service --scale main-service=2
+
+# 关闭所有服务
+docker compose down
+# 关闭指定服务
+docker compose -f docker-compose.yml -p chat down chat-gateway
+
+# 外部需提前创建网络，命令：
+docker network create --driver bridge --subnet 172.88.0.0/16 --gateway 172.88.0.1  mynet
+#   --driver bridge 网络模式为 桥接模式
+#   --subnet 172.88.0.0/16 设置子网
+#   --gateway 172.88.0.1 设置网关
+#   --mynet 自定义的network名
+```
+
+### 注意事项
+
+- restart重启策略 - 生产环境配置推荐
+  1. **微服务或高可用服务**:
+     使用 **`unless-stopped`** 或 **`always`**，确保服务始终在线，但需配合外部监控工具（如 Prometheus、ELK 等）检查运行状态，防止死循环。
+  2. **任务型服务**:
+     使用 **`on-failure`** 。
+
+## 遇到的问题
+
+1. SpringCloudGateWay 转发 websocket 请求报错，提示get请求报错500： java.lang.ClassCastException: org.apache.catalina.connector.ResponseFacade cannot be cast to reactor.netty.http.server.HttpServerResponse
+
+   > 我出现这种情况主要是引用的 chat-common 模块中引入了Tomcat 相关的包导致，排除 Tomcat 相关包
+
+   ```xml
+   <dependency>
+       <groupId>com.bkhech</groupId>
+       <artifactId>chat-common</artifactId>
+       <version>1.0-SNAPSHOT</version>
+       <exclusions>
+           <exclusion>
+               <groupId>org.springframework.boot</groupId>
+               <artifactId>spring-boot-starter-web</artifactId>
+           </exclusion>
+           <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>javax.servlet-api</artifactId>
+           </exclusion>
+           <exclusion>
+               <groupId>org.apache.tomcat.embed</groupId>
+               <artifactId>tomcat-embed-core</artifactId>
+           </exclusion>
+           <exclusion>
+               <groupId>javax.servlet</groupId>
+               <artifactId>jstl</artifactId>
+           </exclusion>
+           <exclusion>
+               <groupId>org.apache.tomcat.embed</groupId>
+               <artifactId>tomcat-embed-jasper</artifactId>
+           </exclusion>
+       </exclusions>
+   </dependency>
+   ```
+
+   - 查找 Tomcat 依赖包方法
+
+     - 利用idea自带的jar包依赖来查看当前项目引用情况，具体ctrl+shift+alt+u来查看依赖情况，找到上面的jar包，去除依赖，或者如下图：
+
+       ![image-20241218175323496](https://raw.githubusercontent.com/guowenmeng/wodkshje/main/wm2024/12/18/20241218175329.png)
+
+2. 
 
 ## 待办事项
 
