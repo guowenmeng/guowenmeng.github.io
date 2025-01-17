@@ -826,7 +826,7 @@ docker network create --driver bridge --subnet 172.88.0.0/16 --gateway 172.88.0.
 
 ## 待办事项
 
-- [ ] `Nacos api` 手动注册聊天服务，然后使用 openfeign 替换聊天服务中的 http
+- [x] 使用 `Nacos api` 手动注册聊天服务，然后使用 `Openfeign` 替换聊天服务中的 http
 
 - [ ] 各服务之间限流功能
 
@@ -848,6 +848,72 @@ docker network create --driver bridge --subnet 172.88.0.0/16 --gateway 172.88.0.
     - 可重入锁：`InterProcessMultiLock`
 
 - [ ] 阿里云语音转文字 `api` 使用实践
+
+###  `Nacos api` 手动注册聊天服务
+
+1. 初始化 `Nacos Client`
+
+   ```java
+   /**
+    * NacosClient
+    *@author guowm
+    *@date 2024/12/18
+    */
+   @Slf4j
+   public class NacosClient {
+   
+       private static volatile NamingService namingService;
+   
+       private static NamingService initNamingService() {
+           final Props properties = PropertiesUtil.getInstance();
+   
+           properties.setProperty(PropertyKeyConst.NAMESPACE, properties.getProperty("nacos.namespace"));
+           properties.setProperty(PropertyKeyConst.SERVER_ADDR, properties.getProperty("nacos.serverAddr"));
+           properties.setProperty(PropertyKeyConst.USERNAME, properties.getProperty("nacos.username"));
+           properties.setProperty(PropertyKeyConst.PASSWORD, properties.getProperty("nacos.password"));
+   
+           try {
+               // 初始化配置中心的 Nacos Java SDK
+               namingService = NacosFactory.createNamingService(properties);
+           } catch (Exception e) {
+               log.error("初始化 NamingService 失败：{},{}", e, e.getMessage());
+               throw new RuntimeException(e);
+           }
+           return namingService;
+   
+       }
+   
+       public static NamingService getNamingService() {
+           if (namingService == null) {
+               synchronized (NacosClient.class) {
+                   if (namingService == null) {
+                       namingService = initNamingService();
+                   }
+               }
+           }
+           return namingService;
+       }
+   }
+   ```
+
+2. 注册聊天服务
+
+   ```java
+    // 把 chat-server 注册到 nacos
+           NacosClient.getNamingService().registerInstance("chat-server", ZKUtil.getLocalIp(), nettPort);
+   ```
+
+3. 使用服务
+
+   ```java
+      final Instance instance = NacosClient.getNamingService().selectOneHealthyInstance("main-service");
+                   String isBlackUrl = String.format(properties.getProperty("chat.friend.isBlack.url"), instance.getIp(), instance.getPort());
+                   String url = StrUtil.format("{}?friendId1st={}&friendId2nd={}", isBlackUrl, chatMsg.getSenderId(), chatMsg.getReceiverId());
+   ```
+
+4. 网关中获取动态聊天服务实例
+
+   ![image-20250117120220050](https://raw.githubusercontent.com/guowenmeng/wodkshje/main/wm2025/01/17/20250117120222.png)
 
 ### 池化技术实现原理
 
