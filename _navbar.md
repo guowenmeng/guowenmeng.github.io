@@ -2,5 +2,7 @@
 
 * [文档导航](/README.md)
 * [Spring 全家桶](/spring-topic/home.md)
-* [高性能](/high-performance-topic/home.md)
-* [常见问题](/questions/Github-Pages自定义域名.md)
+* [三高应用](/three-high-application/home.md)
+* [软技能](/soft-skill/home.md)
+* [实用技能](/common/Github-Pages自定义域名.md)
+* [常见问题](/questions/whoareyou.md)
