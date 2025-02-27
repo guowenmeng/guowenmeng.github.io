@@ -237,7 +237,7 @@ CREATE TABLE `chat_message` (
 
 #### 手动实现 `RabbitMQ`  Connection 连接池
 
-- [x] `RabbitMQ` 的 Java 客户端没有自带连接池，所以需要手动实现。[跳转至实现](#RabbitMQConnectionPool)
+- [x] `RabbitMQ` 的 Java 客户端没有自带连接池，所以需要手动实现。[点击跳转至实现](#池化技术实现原理)
 
 ### 聊天信息相关
 
@@ -913,7 +913,7 @@ docker network create --driver bridge --subnet 172.88.0.0/16 --gateway 172.88.0.
 
    ![image-20250117120220050](https://raw.githubusercontent.com/guowenmeng/wodkshje/main/wm2025/01/17/20250117120222.png)
 
-### <span id="RabbitMQConnectionPool">池化技术实现原理</span>
+### 池化技术实现原理
 
 > `org.apache.commons.pool2.impl.GenericObjectPoolConfig`
 
