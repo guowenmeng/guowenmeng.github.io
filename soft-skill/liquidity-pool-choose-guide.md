@@ -41,7 +41,7 @@
    - 是否是“空气币”？可以在 CoinGecko 或 CoinMarketCap 上查排名和流通情况
    - 是否存在明显的涨跌风险？
 4. 第四步：使用 DeFi 审计工具
-   - RugDoc.io、DefiLlama、DeBank 可以辅助查看项目安全等级
+   - RugDoc.io、DefiLlama 可以辅助查看项目安全等级
    - Check rug pull 风险、资金锁仓情况
    - 
 ## 三、防骗提醒（非常重要）
