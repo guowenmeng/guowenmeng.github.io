@@ -12,4 +12,4 @@
 
 ## 联系我
 
-<img src="https://raw.githubusercontent.com/guowenmeng/wodkshje/main/wm2025/02/27/20250227163815.png" alt="image-20250227163815638" style="zoom:80%;" />
+<img src="https://raw.githubusercontent.com/guowenmeng/wodkshje/main/wm2025/11/26/20251126113408.jpg" alt="my-wechat-qrcode" style="zoom:20%; margin: 0 15px 15px 0;" />
