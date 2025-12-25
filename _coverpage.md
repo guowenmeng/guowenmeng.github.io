@@ -14,7 +14,7 @@
 </style>
 
 [//]: # (<img src="./static/image/logo.png" width="187" height="190" title="哈喽 我是小猛哥">)
-<img src="./static/image/bkhech_2d_world.png" width="1024" height="1040" style="zoom: 15%; margin: 200px 0 0 0;" title="哈喽 我是小猛哥">
+<img src="./static/image/bkhech_2d_world_compress.png" width="1024" height="1040" style="zoom: 15%; margin: 200px 0 0 0;" title="哈喽 我是小猛哥">
 
 <div style="margin-top: 130px;"></div>
 <div style="display: flex; align-content:center; justify-content: center;">
