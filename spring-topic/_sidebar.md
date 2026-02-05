@@ -3,4 +3,4 @@
 * **简介**
   * [专题简介](/spring-topic/home.md)
   * [基于Spring AOP抽象分布式锁实现原理](/spring-topic/distributed-lock.md)
-  * [基于Spring Cache 拓展功能](/spring-topic/spring-cache-extend.md)
+  * [基于Spring Cache扩展的设计与实现思路](/spring-topic/spring-cache-extend.md)

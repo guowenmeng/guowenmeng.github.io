@@ -1,4 +1,4 @@
-# Spring Cache 扩展说明
+# 基于Spring Cache扩展的设计与实现思路
 
 本文档总结 `yfs-dy-core/src/main/java/com/yunyang/dy/core/framework/cache` 包下基于 Spring Cache 的扩展设计与实现，目标是解释整体设计思想、关键组件职责、数据流与配置方式，便于维护与二次演进。
 
