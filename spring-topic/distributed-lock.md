@@ -23,6 +23,10 @@
 
 ### 分布式锁设计
 
+#### 源码实现
+
+https://gitee.com/bkhech/RuoYi-Vue-Plus/tree/bkhech-5.X/ruoyi-common/my-common-project/src/main/java/org/dromara/common/project/lock
+
 #### 核心 `API` 与职责
 
 - `@Lock`：声明式锁注解，描述锁名、键、超时、执行器等
@@ -199,14 +203,9 @@ public class OrderService {
 - 自定义 `LockAnnotationParser` 以支持 SpEL 或自定义 key 规则
 - 自定义 `LockOperationSource` 支持非注解驱动的锁元数据来源
 
-#### 当前限制与待完善
-
-- [x] `@Lock.key` 的 SpEL 解析已实现（AOP 执行阶段解析）
-- [ ] 失败获取锁会抛出 `LockException`，暂无默认重试策略以外的降级方案
-
 ---
 
-### AOP 织入链路时序图
+#### AOP 织入链路时序图
 
 > 按类名组织
 > 在线查看，请访问：https://www.processon.com/view/link/698d9401083ab93f397d7b36 访问密码：22AL
@@ -247,7 +246,7 @@ sequenceDiagram
     Support-->>Interceptor: 执行锁保护的业务逻辑模板
 ```
 
-#### 说明（类名 -> 关键职责）
+ **说明（类名 -> 关键职责）**
 
 - `EnableLock`：通过 `@Import(LockConfigurationSelector)` 触发 AOP 基础设施加载。
 - `LockConfigurationSelector`：根据 `AdviceMode.PROXY` 选择 `ProxyLockConfiguration`。
@@ -260,7 +259,7 @@ sequenceDiagram
 
 ---
 
-### 拦截后到加锁、解锁时序图
+#### 拦截后到加锁、解锁时序图
 
 > 按类名组织
 >
@@ -301,7 +300,7 @@ sequenceDiagram
     end
 ```
 
-#### 说明（类名 -> 关键职责）
+ **说明（类名 -> 关键职责）**
 
 - `LockInterceptor`：拦截方法调用，包装为 `LockOperationInvoker` 交给模板执行。
 - `LockAspectSupport`：构建 `LockOperationContext`、解析 key、负责 try/finally 释放锁。
@@ -309,3 +308,11 @@ sequenceDiagram
 - `LockTemplate`：统一加锁/重试/释放流程，选择 `LockExecutor`。
 - `LockExecutor`：真正执行底层加锁/解锁（如 Redisson）。
 - `BusinessMethod`：被 `@Lock` 标记的业务方法本体。
+
+- 
+
+#### 当前限制与待完善
+
+- [x] `@Lock.key` 的 SpEL 解析已实现（AOP 执行阶段解析）
+- [ ] 失败获取锁会抛出 `LockException`，暂无默认重试策略以外的降级方案
+- [ ] @Lock 属性 key 支持数组
