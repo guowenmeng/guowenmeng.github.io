@@ -9,3 +9,4 @@
   * [算出来的财富法则](/soft-skill/算出来的财富法则.md)
   * [怎样算情商高](/soft-skill/怎样算情商高.md)
   * [Bypass Paywalls Clean](/soft-skill/Bypass-Paywalls-Clean.md)
+  * [腰部自救指南](/soft-skill/腰部自救指南.md)
